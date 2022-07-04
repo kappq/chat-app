@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="title">Chat</h1>
+<div class="mb-4" id="messages"></div>
+<div class="field is-grouped">
+    <div class="control is-expanded has-icons-left">
+        <input class="input" type="text" placeholder="Message..." id="input">
+        <span class="icon is-small is-left">
+            <i class="far fa-message"></i>
+        </span>
+    </div>
+    <div class="control">
+        <button class="button is-link" type="submit" id="send">Send</button>
+    </div>
+    <div class="control">
+        <button class="button is-light" id="leave">Leave Room</button>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+<script type="text/javascript" charset="utf-8">
+    const username = '{{ username }}';
+
+    var socket = io();
+
+    var messages = document.getElementById('messages');
+    var input = document.getElementById('input');
+    var send = document.getElementById('send');
+    var leave = document.getElementById('leave');
+
+    socket.on('connect', function() {
+        socket.emit('joined', {
+            'msg': `${username} has connected!`
+        });
+    });
+
+    socket.on('disconnect', function() {
+        socket.emit('left', {
+            'msg': `${username} has disconnected...`
+        });
+    });
+
+    socket.on('message', function(data) {
+        const messageTemplate = `<article class="media">
+            <div class="media-content">
+                <div class="content">
+                    <p>
+                        <strong>${data.author}</strong>
+                        <br>
+                        ${data.msg}
+                    </p>
+                </div>
+            </div>
+        </article>`;
+
+        messages.innerHTML += messageTemplate;
+    });
+
+    socket.on('joined', function(data) {
+        const messageTemplate = `<article class="media">
+            <div class="media-content">
+                <div class="content">
+                    <p class="has-text-success has-text-weight-bold">
+                        ${data.msg}
+                    </p>
+                </div>
+            </div>
+        </article>`;
+
+        messages.innerHTML += messageTemplate;
+    });
+
+    socket.on('left', function(data) {
+        const messageTemplate = `<article class="media">
+            <div class="media-content">
+                <div class="content">
+                    <p class="has-text-danger has-text-weight-bold">
+                        ${data.msg}
+                    </p>
+                </div>
+            </div>
+        </article>`;
+
+        messages.innerHTML += messageTemplate;
+    });
+
+    send.onclick = function() {
+        socket.emit('message', {
+            'author': username,
+            'msg': input.value,
+        });
+        input.value = '';
+    };
+
+    leave.onclick = function() {
+        socket.emit('left', {
+            'msg': `${username} has disconnected...`
+        });
+        location.href = "{{ url_for('chat.join') }}";
+    };
+</script>
+{% endblock %}
