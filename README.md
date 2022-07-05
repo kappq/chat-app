@@ -1,5 +1,5 @@
 # chat-app
-This is a real-time chat app made with Flask and Socket.io.
+A real-time chat app made with Flask and Socket.io.
 
 ## Features
 - Authentication (Sign Up, Login and Logout).
