@@ -1,6 +1,13 @@
 # chat-app
 This is a real-time chat app made with Flask and Socket.io.
 
+## Features
+- Authentication (Sign Up, Login and Logout).
+- Rooms.
+- Real-time chat with usernames, connect and disconnect messages.
+- Responsive UI with Bulma.
+- (To-Do) Message persistency.
+
 ## Installation
 Clone the repository:
 ```
