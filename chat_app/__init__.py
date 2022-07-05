@@ -11,14 +11,14 @@ socketio = SocketIO()
 def create_app():
     app = Flask(__name__)
 
-    app.config['SECRET_KEY'] = 'd02lCwjVMfB4tw9n96a4rw'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+    app.config["SECRET_KEY"] = "d02lCwjVMfB4tw9n96a4rw"
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db.sqlite"
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 
     db.init_app(app)
 
     login_manager = LoginManager()
-    login_manager.login_view = 'auth.login'
+    login_manager.login_view = "auth.login"
     login_manager.init_app(app)
 
     from .models import User
@@ -32,9 +32,6 @@ def create_app():
 
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
-
-    from .chat import chat as chat_blueprint
-    app.register_blueprint(chat_blueprint)
 
     socketio.init_app(app)
 

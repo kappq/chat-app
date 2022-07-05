@@ -2,4 +2,14 @@
 
 {% block content %}
 <h1 class="title">Home</h1>
+<form action="{{ url_for('main.index') }}" method="post">
+    <div class="field is-grouped">
+        <div class="control is-expanded">
+            <input class="input" type="text" name="room" placeholder="Room" autofocus>
+        </div>
+        <div class="control">
+            <button class="button is-link" type="submit">Join</button>
+        </div>
+    </div>
+</form>
 {% endblock %}

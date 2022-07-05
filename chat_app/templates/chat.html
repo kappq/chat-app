@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1 class="title">Chat</h1>
+<h1 class="title">Chat Room: {{ room }}</h1>
 <div class="mb-4" id="messages" style="height: 80vh; overflow-y: auto;"></div>
 <div class="field is-grouped">
     <div class="control is-expanded has-icons-left">
@@ -28,19 +28,15 @@
     var send = document.getElementById('send');
     var leave = document.getElementById('leave');
 
-    socket.on('connect', function() {
-        socket.emit('joined', {
-            'msg': `${username} has connected!`
-        });
+    socket.on('connect', function () {
+        socket.emit('joined', { 'msg': `${username} has connected!` });
     });
 
-    socket.on('disconnect', function() {
-        socket.emit('left', {
-            'msg': `${username} has disconnected...`
-        });
+    socket.on('disconnect', function () {
+        socket.emit('left', { 'msg': `${username} has disconnected...` });
     });
 
-    socket.on('message', function(data) {
+    socket.on('message', function (data) {
         const messageTemplate = `<article class="media">
             <div class="media-content">
                 <div class="content">
@@ -57,7 +53,7 @@
         messages.scrollTop = messages.scrollHeight;
     });
 
-    socket.on('joined', function(data) {
+    socket.on('joined', function (data) {
         const messageTemplate = `<article class="media">
             <div class="media-content">
                 <div class="content">
@@ -72,7 +68,7 @@
         messages.scrollTop = messages.scrollHeight;
     });
 
-    socket.on('left', function(data) {
+    socket.on('left', function (data) {
         const messageTemplate = `<article class="media">
             <div class="media-content">
                 <div class="content">
@@ -87,22 +83,17 @@
         messages.scrollTop = messages.scrollHeight;
     });
 
-    send.onclick = function() {
-        socket.emit('message', {
-            'author': username,
-            'msg': input.value,
-        });
+    send.onclick = function () {
+        socket.emit('message', { 'author': username, 'msg': input.value });
         input.value = '';
     };
 
-    leave.onclick = function() {
-        socket.emit('left', {
-            'msg': `${username} has disconnected...`
-        });
-        location.href = "{{ url_for('chat.join') }}";
+    leave.onclick = function () {
+        socket.emit('left', { 'msg': `${username} has disconnected...` });
+        location.href = "{{ url_for('main.index') }}";
     };
 
-    input.onkeypress = function(event) {
+    input.onkeypress = function (event) {
         if (event.key === 'Enter') {
             send.click();
         }
