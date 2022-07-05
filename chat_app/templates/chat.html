@@ -2,10 +2,10 @@
 
 {% block content %}
 <h1 class="title">Chat</h1>
-<div class="mb-4" id="messages"></div>
+<div class="mb-4" id="messages" style="height: 80vh; overflow-y: auto;"></div>
 <div class="field is-grouped">
     <div class="control is-expanded has-icons-left">
-        <input class="input" type="text" placeholder="Message..." id="input">
+        <input class="input" type="text" placeholder="Message..." id="input" autofocus>
         <span class="icon is-small is-left">
             <i class="far fa-message"></i>
         </span>
@@ -14,7 +14,7 @@
         <button class="button is-link" type="submit" id="send">Send</button>
     </div>
     <div class="control">
-        <button class="button is-light" id="leave">Leave Room</button>
+        <button class="button is-danger" id="leave">Leave Room</button>
     </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
@@ -54,6 +54,7 @@
         </article>`;
 
         messages.innerHTML += messageTemplate;
+        messages.scrollTop = messages.scrollHeight;
     });
 
     socket.on('joined', function(data) {
@@ -68,6 +69,7 @@
         </article>`;
 
         messages.innerHTML += messageTemplate;
+        messages.scrollTop = messages.scrollHeight;
     });
 
     socket.on('left', function(data) {
@@ -82,6 +84,7 @@
         </article>`;
 
         messages.innerHTML += messageTemplate;
+        messages.scrollTop = messages.scrollHeight;
     });
 
     send.onclick = function() {
@@ -97,6 +100,12 @@
             'msg': `${username} has disconnected...`
         });
         location.href = "{{ url_for('chat.join') }}";
+    };
+
+    input.onkeypress = function(event) {
+        if (event.key === 'Enter') {
+            send.click();
+        }
     };
 </script>
 {% endblock %}
